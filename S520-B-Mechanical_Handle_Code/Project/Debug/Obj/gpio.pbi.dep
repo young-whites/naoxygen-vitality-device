@@ -1,0 +1,18 @@
+gpio.pbi: \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\USER\gpio.c \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\USER/gpio.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\Project\..\FWlib\inc\stm8s.h \
+  D:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\stm8\inc\c\stdbool.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\USER\stm8s_conf.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\Project\..\FWlib\inc\stm8s_adc1.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\Project\..\FWlib\inc/stm8s.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\Project\..\FWlib\inc\stm8s_clk.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\Project\..\FWlib\inc\stm8s_gpio.h \
+  D:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 8.3\stm8\inc\c\intrinsics.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\USER/stm8s_conf.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\USER/motor.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\USER/timer.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\Project\..\FWlib\inc\stm8s_tim1.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\USER/usart.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\Project\..\FWlib\inc\stm8s_uart1.h \
+  E:\Work\ Item\ Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.1\Project\..\FWlib\inc\stm8s_uart3.h
