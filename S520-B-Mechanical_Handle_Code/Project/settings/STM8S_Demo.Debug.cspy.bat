@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\settings\STM8S_Demo.Debug.general.xcl" --backend -f "E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\settings\STM8S_Demo.Debug.driver.xcl" 
+"D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\settings\STM8S_Demo.Debug.general.xcl" --backend -f "I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\settings\STM8S_Demo.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\settings\STM8S_Demo.Debug.general.xcl" "--debug_file=%~1" --backend -f "E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\settings\STM8S_Demo.Debug.driver.xcl" 
+"D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\common\bin\cspybat" -f "I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\settings\STM8S_Demo.Debug.general.xcl" "--debug_file=%~1" --backend -f "I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\settings\STM8S_Demo.Debug.driver.xcl" 
 
 @echo off 
 :end

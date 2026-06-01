@@ -164,6 +164,73 @@ void USART4_Order_to_Mechanical_Handle(uint8_t Order)
     uint8_t temp_buffer[20] = { 0 };
     switch (Order)
     {
+        case Order_HAND_ACT_WORK_MODE_ZERO_CMD:  // Stop motor
+            temp_buffer[0] = 0x17;  // MOTOR_MODE_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            temp_buffer[2] = 0x00;  // Stop
+            USART4_Send_Command_to_Principal(3, 0x31, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_ACT_CTRL_FORWARD:  // Manual forward
+            temp_buffer[0] = 0x2D;  // MOVE_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            temp_buffer[2] = 0x02;  // Forward
+            USART4_Send_Command_to_Principal(3, 0x31, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_ACT_CTRL_BACK:  // Manual back
+            temp_buffer[0] = 0x2D;  // MOVE_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            temp_buffer[2] = 0x01;  // Back
+            USART4_Send_Command_to_Principal(3, 0x31, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_ACT_CTRL_STOP:  // Stop
+            temp_buffer[0] = 0x2D;  // MOVE_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            temp_buffer[2] = 0x00;  // Stop
+            USART4_Send_Command_to_Principal(3, 0x31, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_ACT_CTRL_RESET:  // Reset to rear
+            temp_buffer[0] = 0x2D;  // MOVE_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            temp_buffer[2] = 0x03;  // Reset
+            USART4_Send_Command_to_Principal(3, 0x31, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_ACT_CTRL_BACK_STOP:  // Back 0.6s then stop
+            temp_buffer[0] = 0x2D;  // MOVE_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            temp_buffer[2] = 0x04;  // Back-stop
+            USART4_Send_Command_to_Principal(3, 0x31, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_ACT_AUTO_CHECK:  // Calibrate motor
+            temp_buffer[0] = 0x3D;  // CHECK_MOTOR_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            temp_buffer[2] = 0x00;
+            USART4_Send_Command_to_Principal(3, 0x31, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_ACT_SAVE_STEP_PROGRESS:  // Save position
+            temp_buffer[0] = 0x3E;  // MOTOR_STEP_SAVE
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            temp_buffer[2] = 0x00;
+            USART4_Send_Command_to_Principal(3, 0x31, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_SEND_HAND_LOCATION:  // Request position
+            temp_buffer[0] = 0x2E;  // MOTOR_STEP_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            USART4_Send_Command_to_Principal(2, 0x32, 0x02, temp_buffer);
+            break;
+
+        case Order_HAND_SEND_HAND_VERSION:  // Request version
+            temp_buffer[0] = 0x19;  // REVISION_CMD
+            temp_buffer[1] = 0x02;  // NORMAL_DATA_SEND
+            USART4_Send_Command_to_Principal(2, 0x32, 0x02, temp_buffer);
+            break;
 
         default:
             break;
@@ -183,16 +250,44 @@ void USART4_Order_to_Mechanical_Handle(uint8_t Order)
 ********************************************************************/
 void USART4_Deal_correct_data(unsigned  char  *buf, unsigned char len)
 {
-    if(len == 0)    return;                             //设备ID2个字节已判断过,此处忽略
+    if(len == 0)    return;                             //Device ID 2 bytes already checked
     switch (buf[2])
     {
-        case FRAME_TYPE_ACT: 
+        case FRAME_TYPE_ACT:  // 0x31
         {
-           if(buf[3] == 0x02)                           //发送的指令或响应
+           if(buf[3] == 0x02)                          // Command or response
             {
                 switch(buf[4])
-                {              
+                {
+                    case 0x2E:  // MOTOR_STEP_CMD -- Handle position report
+                    {
+                        uint8_t location = buf[5];
+                        // TODO: Update display / sync to APP
+                        // Location is 0-100 percent
+                    } break;
 
+                    case 0x2F:  // RUTURN_FLAG_CMD -- Return status
+                    {
+                        if(buf[5] == 0) {
+                            Flag.Hand_ReturnStatus = 0;  // Returned / timeout
+                        } else if(buf[5] == 1) {
+                            Flag.Hand_ReturnStatus = 1;  // Returning, ignore APP
+                        }
+                    } break;
+
+                    case 0xBB:  // HANDLE_CHECK -- Handle detect / beep
+                    {
+                        // Beep briefly to confirm handle detected
+                        BEEP_On();
+                        Delay_ms(50);
+                        BEEP_Off();
+                    } break;
+
+                    case 0x19:  // REVISION_CMD -- Version
+                    {
+                        uint8_t version = buf[5];
+                        // TODO: Store/display handle version
+                    } break;
 
                     default:
                         break;
@@ -201,35 +296,25 @@ void USART4_Deal_correct_data(unsigned  char  *buf, unsigned char len)
         }
         break;
 
-
-
-        case FRAME_TYPE_SET: 
+        case FRAME_TYPE_SET:  // 0x32
         {
             if(buf[3] == 0x02)
             {
-                switch(buf[4])
-                {
-
-                }
+                // Handle response to GET commands
             }
-        }
-        break;   
-
-
-
-        case FRAME_TYPE_GET: 
-        {
-           if(buf[3] == 0x02)                         
-           {
-                switch(buf[4])
-                {   
-
-                }
-           }  
         }
         break;
 
-        default:    break;  
+        case FRAME_TYPE_GET:  // 0x33
+        {
+           if(buf[3] == 0x02)
+           {
+                // Handle proactive report data
+           }
+        }
+        break;
+
+        default:    break;
    }
 }
 
