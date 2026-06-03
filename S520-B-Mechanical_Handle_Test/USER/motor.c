@@ -13,8 +13,8 @@ void motor_hiz(void)
 
 void motor_stop(void)
 {
+    /* Stop PWM first, then ENA LOW. Keep IN1/IN2 as outputs. */
     pwm_init(STOP, SPEED_MODE_0, 0);
-    motor_hiz();
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN); // ENA LOW
     motor.direction = 0;
 }
@@ -35,12 +35,10 @@ void motor_forward(u8 mode)
     }
 
     motor.direction = 2;
-    /* Startup sequence: ENA LOW -> stop PWM -> ENA HIGH -> start PWM */
+    /* Startup sequence: ENA LOW -> stop -> ENA HIGH -> start */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
     pwm_init(STOP, SPEED_MODE_0, 0);
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     pwm_init(START, speed_arr, 2);
 }
 
@@ -49,12 +47,10 @@ void motor_backward(void)
     if (motor.limit_rear) return;
 
     motor.direction = 1;
-    /* Startup sequence: ENA LOW -> stop PWM -> ENA HIGH -> start PWM */
+    /* Startup sequence: ENA LOW -> stop -> ENA HIGH -> start */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
     pwm_init(STOP, SPEED_MODE_0, 0);
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     pwm_init(START, SPEED_REVERSE, 1);
 }
 
