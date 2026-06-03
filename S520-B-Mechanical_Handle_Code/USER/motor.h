@@ -5,7 +5,6 @@
 #include "timer.h"
 
 void motor_stop(void);
-void motor_hiz(void);
 void motor_forword(u8 mode);
 void motor_bank(void);
 void check_stop(void);

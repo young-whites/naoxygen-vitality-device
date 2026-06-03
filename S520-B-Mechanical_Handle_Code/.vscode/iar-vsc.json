@@ -11,8 +11,5 @@
         "path": "${workspaceFolder}\\Project\\STM8S_Demo.ewp"
       }
     }
-  },
-  "workbench": {
-    "path": "D:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.0"
   }
 }
