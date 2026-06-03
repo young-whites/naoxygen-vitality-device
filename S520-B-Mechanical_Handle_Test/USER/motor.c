@@ -40,8 +40,76 @@ void SendRuturnFlag(u8 flag)
     senddata(RUTURN_FLAG_CMD,flag);
 }
 
+/* ---- Acceleration ramp ---- */
+#define ACCEL_STEPS     20      /* number of ramp steps */
+#define ACCEL_INTERVAL  10      /* ms between each step */
+
+static volatile u8  accel_active = 0;
+static volatile u8  accel_steps_remaining = 0;
+static volatile u8  accel_counter = 0;
+static u32 accel_start_arr = 0;  /* ARR at first step (slow) */
+static u32 accel_target_arr = 0; /* ARR at target speed */
+
+void accel_start(u32 target_arr)
+{
+    accel_start_arr = speed_mode[5];  /* always start from slowest */
+    accel_target_arr = target_arr;
+    accel_steps_remaining = ACCEL_STEPS;
+    accel_counter = 0;
+    accel_active = 1;
+}
+
+/*
+ * Linear interpolation: ramp ARR from accel_start_arr down to accel_target_arr.
+ * Update CCR2/CCR4 proportionally so the effective duty cycle ratio stays constant.
+ *
+ * Forward: CCR2 = ARR (full, inverted), CCR4 = ARR/2 (half, inverted)
+ * Backward: CCR2 = ARR/2, CCR4 = ARR
+ */
+void accel_update(void)
+{
+    u32 cur_arr;
+    u32 step;
+    u32 ccr2, ccr4;
+
+    if (!accel_active || accel_steps_remaining == 0)
+        return;
+
+    if (++accel_counter < ACCEL_INTERVAL)
+        return;
+    accel_counter = 0;
+
+    step = ACCEL_STEPS - accel_steps_remaining + 1;  /* 1 .. ACCEL_STEPS */
+    /* Linear interpolation: cur_arr = start + (target - start) * step / STEPS */
+    cur_arr = accel_start_arr
+            + (u32)((s32)(accel_target_arr - accel_start_arr) * (s32)step / ACCEL_STEPS);
+
+    /* Update ARR */
+    TIM1->ARRH = (u8)(cur_arr >> 8);
+    TIM1->ARRL = (u8)(cur_arr);
+
+    /* Update CCR2/CCR4 proportionally */
+    if (systemparameter.currt_mode == 2) {
+        /* Forward: OC2=full, OC4=half */
+        ccr2 = cur_arr;
+        ccr4 = cur_arr / 2;
+    } else {
+        /* Backward: OC2=half, OC4=full */
+        ccr2 = cur_arr / 2;
+        ccr4 = cur_arr;
+    }
+    TIM1->CCR2H = (u8)(ccr2 >> 8);
+    TIM1->CCR2L = (u8)(ccr2);
+    TIM1->CCR4H = (u8)(ccr4 >> 8);
+    TIM1->CCR4L = (u8)(ccr4);
+
+    if (--accel_steps_remaining == 0)
+        accel_active = 0;
+}
+
 void motor_hiz(void)
 {
+    accel_active = 0;  /* cancel any running ramp */
     // Set IN1/IN2 to high-impedance (floating input)
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_IN_FL_NO_IT);
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_IN_FL_NO_IT);
@@ -67,7 +135,8 @@ void motor_forword(u8 mode)
     // Reconfigure IN1/IN2 as push-pull output for timer PWM control
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    pwm_init( START,speed_mode[mode],2);
+    pwm_init( START,speed_mode[5],2);  /* start from slowest speed */
+    accel_start(speed_mode[mode]);     /* accelerate to target */
 }
 
 void motor_bank(void)
@@ -76,7 +145,8 @@ void motor_bank(void)
     // Reconfigure IN1/IN2 as push-pull output for timer PWM control
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    pwm_init( START,speed_mode[5],1);
+    pwm_init( START,speed_mode[5],1);  /* start from slowest speed */
+    accel_start(speed_mode[5]);         /* backward: stay at slow speed */
 }
 
 

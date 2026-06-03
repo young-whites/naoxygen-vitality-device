@@ -61,7 +61,7 @@ int main(void)
         adjust_Value = EEPROM_ReadData(ADJUST_SPEED_VALUE_ADDR);
         Delay_ms(10);
 
-        /* Õâ¸öÊý¾ÝÓÃÀ´¼ÆËã½ø¶ÈÌõ */
+        /* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
         Progress_H = EEPROM_ReadData(MOTOR_DATA_ADDR_HIGH8);
          Delay_ms(10);
         Progress_L = EEPROM_ReadData(MOTOR_DATA_ADDR_LOW8);
@@ -108,6 +108,7 @@ int main(void)
     
     while(1)
     {
+       accel_update();
        check_stop();
     }
     

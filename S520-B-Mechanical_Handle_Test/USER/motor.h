@@ -8,6 +8,8 @@ void motor_stop(void);
 void motor_hiz(void);
 void motor_forword(u8 mode);
 void motor_bank(void);
+void accel_start(u32 target_arr);
+void accel_update(void);
 void check_stop(void);
 void SendDjData(void);
 void motor_step_save(void);
