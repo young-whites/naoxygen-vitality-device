@@ -62,7 +62,10 @@ void motor_hiz(void)
 
 void motor_stop(void)
 {
-    pwm_init(STOP, MOTOR_SPEED_STOP, 0);
+    /* Disable TIM1 outputs directly, avoid pwm_init() CLK_DeInit */
+    TIM1->CCER1 &= ~(u8)(TIM1_CCER1_CC2E | TIM1_CCER1_CC2NE);
+    TIM1->CCER2 &= ~(u8)(TIM1_CCER2_CC4E);
+    TIM1->BDTR &= ~(u8)(TIM1_BDTR_MOE);
     motor_hiz();
     motor.direction = 0;
 }
