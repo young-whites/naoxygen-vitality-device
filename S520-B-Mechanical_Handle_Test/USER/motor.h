@@ -4,8 +4,8 @@
 #include "stm8s_conf.h"
 #include "timer.h"
 
-#define MOTOR_SPEED_SLOW    300
-#define MOTOR_SPEED_FAST    2400
+#define MOTOR_SPEED_SLOW    2400
+#define MOTOR_SPEED_FAST    300
 #define MOTOR_SPEED_STOP    0
 
 #define ACCEL_STEPS         20
