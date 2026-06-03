@@ -6,7 +6,6 @@
 #include "usart.h"
 #include "motor.h"
 #include "Decode.h"
-#include "eeprom.h"
 #include "stm8s_tim2.h"
 
 
@@ -52,30 +51,9 @@ __interrupt void TIM2_IRQHandler(void)
 #pragma vector=0xD
 __interrupt void TIM1_UPD_OVF_TRG_BRK_IRQHandler( void )
 {
-    if(systemparameter.currt_mode==1)//backforward
-    {    
-        if(systemparameter.tim1_count_cnt1 <= systemparameter.max_motor_count)
-        {     
-            if(systemparameter.tim1_count_cnt1%systemparameter.motor_100==0)
-            { 
-                systemparameter.SendDjData_flag=1;
-            }
-            systemparameter.tim1_count_cnt1++;      
-        }
-    }
-    else if(systemparameter.currt_mode == 2)//forward
-    {
-        if(systemparameter.tim1_count_cnt1 > 0)
-        {
-            if(systemparameter.tim1_count_cnt1 % systemparameter.motor_100==0)
-            { 
-                systemparameter.SendDjData_flag=1;
-            }
-            systemparameter.tim1_count_cnt1--;
-        }
-    }
-    
-   TIM1_ClearITPendingBit( TIM1_IT_UPDATE );
+    /* TIM1 update interrupt - kept for PWM operation.
+       Step counting and position tracking removed in refactor. */
+    TIM1_ClearITPendingBit( TIM1_IT_UPDATE );
 }
 
 #pragma vector=0x14
