@@ -62,9 +62,9 @@ void motor_hiz(void)
 
 void motor_stop(void)
 {
-    /* Use pwm_init STOP with a safe period to avoid ARR=0 interrupt storm */
     pwm_init(STOP, MOTOR_SPEED_SLOW, 0);
     motor_hiz();
+    GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN); // ENA LOW
     motor.direction = 0;
 }
 
@@ -72,6 +72,7 @@ void motor_forward(void)
 {
     if (motor.limit_front) return;
     motor.direction = 2;
+    GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN); // ENA HIGH
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     pwm_init(START, MOTOR_SPEED_SLOW, 2);
@@ -82,6 +83,7 @@ void motor_backward(void)
 {
     if (motor.limit_rear) return;
     motor.direction = 1;
+    GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN); // ENA HIGH
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     pwm_init(START, MOTOR_SPEED_SLOW, 1);
