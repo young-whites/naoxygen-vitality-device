@@ -1,10 +1,10 @@
-"D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\bin\stm8proc.dll" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\bin\stm8proc.dll" 
 
-"D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\bin\stm8sim.dll" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\bin\stm8sim.dll" 
 
-"E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\Debug\Exe\STM8S_Demo.out" 
+"C:\Users\18452\Documents\GitHub-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\Debug\Exe\STM8S_Demo.out" 
 
---plugin "D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\bin\stm8bat.dll" 
+--plugin "C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\bin\stm8bat.dll" 
 
 
 

@@ -1,22 +1,22 @@
-"E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\USER\Decode.c"
+"C:\Users\18452\Documents\GitHub-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\USER\Decode.c"
 -std=c99
 -ferror-limit=0
 -I
-E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\..\FWlib\inc
+C:\Users\18452\Documents\GitHub-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\..\FWlib\inc
 -I
-E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\..\FWlib\src
+C:\Users\18452\Documents\GitHub-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\..\FWlib\src
 -I
-E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\..\USER
+C:\Users\18452\Documents\GitHub-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\..\USER
 -I
-D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\inc
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\inc
 -I
-D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\inc\c
+C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\inc\c
 -I
-E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\FWlib\inc
+C:\Users\18452\Documents\GitHub-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\FWlib\inc
 -I
-E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\FWlib\src
+C:\Users\18452\Documents\GitHub-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\FWlib\src
 -I
-E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\USER
+C:\Users\18452\Documents\GitHub-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\USER
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
@@ -261,8 +261,8 @@ E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ve
 -D__EDG_SYSV=0
 -D__EDG_ANSIC=1
 -D__EDG_CPP11_IL_EXTENSIONS_SUPPORTED=1
--D_DLIB_CONFIG_FILE_HEADER_NAME="D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\LIB\dlstm8smn.h"
--D_DLIB_CONFIG_FILE_STRING="D:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.0\\stm8\\LIB\\dlstm8smn.h"
+-D_DLIB_CONFIG_FILE_HEADER_NAME="C:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\LIB\dlstm8smn.h"
+-D_DLIB_CONFIG_FILE_STRING="C:\\Program Files (x86)\\IAR Systems\\Embedded Workbench 8.0\\stm8\\LIB\\dlstm8smn.h"
 -D__VERSION__="IAR C/C++ Compiler V3.10.1.201 for STM8"
 -D__CODE_MEMORY_LIST1__()=__CODE_MEM_HELPER1__(__code, 0 )
 -D__CODE_MEMORY_LIST2__(_P1)=__CODE_MEM_HELPER2__(__code, 0 ,  _P1 )
