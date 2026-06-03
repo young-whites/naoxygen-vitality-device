@@ -5,89 +5,51 @@
 
 motor_state_t motor;
 
-static volatile u8  accel_active = 0;
-static volatile u8  accel_remaining = 0;
-static volatile u8  accel_counter = 0;
-static u32 accel_start_arr = 0;
-static u32 accel_target_arr = 0;
-static u8  accel_direction = 0;
-
-void accel_start(u32 target_arr, u8 direction)
-{
-    accel_start_arr = MOTOR_SPEED_SLOW;
-    accel_target_arr = target_arr;
-    accel_direction = direction;
-    accel_remaining = ACCEL_STEPS;
-    accel_counter = 0;
-    accel_active = 1;
-}
-
-void accel_update(void)
-{
-    u32 cur_arr, ccr2, ccr4;
-    u32 step;
-
-    if (!accel_active || accel_remaining == 0) return;
-    if (++accel_counter < ACCEL_INTERVAL_MS) return;
-    accel_counter = 0;
-
-    step = ACCEL_STEPS - accel_remaining + 1;
-    cur_arr = accel_start_arr
-            + (u32)((s32)(accel_target_arr - accel_start_arr) * (s32)step / ACCEL_STEPS);
-
-    TIM1->ARRH = (u8)(cur_arr >> 8);
-    TIM1->ARRL = (u8)(cur_arr);
-
-    if (accel_direction == 2) {
-        ccr2 = cur_arr;
-        ccr4 = cur_arr / 2;
-    } else {
-        ccr2 = cur_arr / 2;
-        ccr4 = cur_arr;
-    }
-    TIM1->CCR2H = (u8)(ccr2 >> 8);
-    TIM1->CCR2L = (u8)(ccr2);
-    TIM1->CCR4H = (u8)(ccr4 >> 8);
-    TIM1->CCR4L = (u8)(ccr4);
-
-    if (--accel_remaining == 0) accel_active = 0;
-}
-
 void motor_hiz(void)
 {
-    accel_active = 0;
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_IN_FL_NO_IT);
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_IN_FL_NO_IT);
 }
 
 void motor_stop(void)
 {
-    pwm_init(STOP, MOTOR_SPEED_SLOW, 0);
+    pwm_init(STOP, SPEED_MODE_0, 0);
     motor_hiz();
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN); // ENA LOW
     motor.direction = 0;
 }
 
-void motor_forward(void)
+void motor_forward(u8 mode)
 {
+    u32 speed_arr;
+
     if (motor.limit_front) return;
+
+    /* Map mode to ARR value */
+    switch (mode) {
+        case 0:  speed_arr = SPEED_MODE_0; break;
+        case 1:  speed_arr = SPEED_MODE_1; break;
+        case 2:  speed_arr = SPEED_MODE_2; break;
+        case 3:  speed_arr = SPEED_MODE_3; break;
+        default: speed_arr = SPEED_MODE_2; break;
+    }
+
     motor.direction = 2;
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN); // ENA HIGH
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    pwm_init(START, MOTOR_SPEED_SLOW, 2);
-    accel_start(MOTOR_SPEED_FAST, 2);
+    pwm_init(START, speed_arr, 2);
 }
 
 void motor_backward(void)
 {
     if (motor.limit_rear) return;
+
     motor.direction = 1;
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN); // ENA HIGH
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    pwm_init(START, MOTOR_SPEED_SLOW, 1);
-    accel_start(MOTOR_SPEED_SLOW, 1);
+    pwm_init(START, SPEED_REVERSE, 1);
 }
 
 void check_limit(void)

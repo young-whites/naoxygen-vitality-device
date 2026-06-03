@@ -4,19 +4,17 @@
 #include "stm8s_conf.h"
 #include "timer.h"
 
-#define MOTOR_SPEED_SLOW    2400
-#define MOTOR_SPEED_FAST    300
-#define MOTOR_SPEED_STOP    0
+/* Speed modes: smaller ARR = faster */
+#define SPEED_MODE_0    3600    /* slowest */
+#define SPEED_MODE_1    3200
+#define SPEED_MODE_2    2800
+#define SPEED_MODE_3    2400    /* fastest */
+#define SPEED_REVERSE   300     /* backward speed */
 
-#define ACCEL_STEPS         20
-#define ACCEL_INTERVAL_MS   10
-
-void motor_forward(void);
+void motor_forward(u8 mode);
 void motor_backward(void);
 void motor_stop(void);
 void motor_hiz(void);
-void accel_start(u32 target_arr, u8 direction);
-void accel_update(void);
 void check_limit(void);
 
 typedef struct {

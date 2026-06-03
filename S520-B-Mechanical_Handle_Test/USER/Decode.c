@@ -188,6 +188,8 @@ void DecodeMessageHandle( u8 Usart_Num, DecodeReceiveDataTypedef *Decode_Buffer 
 }
 
 
+u8 motor_mode = 2;  /* default speed mode */
+
 void CMD_MessageHandle( u8 Usart_Num, u8 data_length, u8 *data_buffer )
 {
     char temp_buffer[20], i;
@@ -212,12 +214,29 @@ void CMD_MessageHandle( u8 Usart_Num, u8 data_length, u8 *data_buffer )
                     }
                     else if (temp_buffer[2] == 2)  /* forward */
                     {
-                        motor_forward();
+                        motor_forward(motor_mode);
                     }
                     else if (temp_buffer[2] == 1)  /* backward */
                     {
                         motor_backward();
                     }
+                    break;
+                }
+                case LITTLE_CMD:
+                {
+                    /* Speed mode selection:
+                       data[2]==5       -> mode 0 (slowest)
+                       data[2]==11~13   -> mode 1
+                       data[2]==20      -> mode 2 (default)
+                       data[2]==27~29   -> mode 3 (fastest) */
+                    if (temp_buffer[2] == 5)
+                        motor_mode = 0;
+                    else if (temp_buffer[2] > 10 && temp_buffer[2] < 14)
+                        motor_mode = 1;
+                    else if (temp_buffer[2] == 20)
+                        motor_mode = 2;
+                    else if (temp_buffer[2] > 26 && temp_buffer[2] < 30)
+                        motor_mode = 3;
                     break;
                 }
                 case ACK_CMD:

@@ -30,7 +30,6 @@ int main(void)
 
     while(1)
     {
-        accel_update();
         check_limit();
     }
 }
