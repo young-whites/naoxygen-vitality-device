@@ -12,17 +12,8 @@
 
 void Timing_10ms(void)
 {
-    /* Return timeout protection: if motor is returning but stuck */
-    if (systemparameter.IfRuturning && systemparameter.k_flag == 0)
-    {
-        systemparameter.return_timeout++;
-        if (systemparameter.return_timeout > 3000)  /* ~30s at 10ms interval */
-        {
-            motor_stop();
-            systemparameter.IfRuturning = 0;
-            SendRuturnFlag(0);  /* Notify mainboard of timeout */
-        }
-    }
+
+
 }
 
 
@@ -40,6 +31,7 @@ void Timing_1ms(void)
 __interrupt void TIM2_IRQHandler(void)
 {
     static uint32_t msCnt = 0;
+    msCnt++;
     /*计数用于取余运算来判断时间事件*/
     if (++msCnt >= 60000)
     {

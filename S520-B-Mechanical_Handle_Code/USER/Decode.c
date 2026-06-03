@@ -153,14 +153,7 @@ void ReceiveMessageDecode( u8 Usart_Num, USART_ReceiveDataTypedef *Uart_Device_R
                 }
                 else{
                     ( *Decode_Buffer ).Crc16 |= ( ( u16 )data_temp );
-                    /* Verify CRC before processing */
-                    {
-                        u16 calc_crc = CRC16_Check( (*Decode_Buffer).DataField, (*Decode_Buffer).DataLength - 2 );
-                        if ( calc_crc == (*Decode_Buffer).Crc16 )
-                        {
-                            DecodeMessageHandle( Usart_Num, Decode_Buffer );
-                        }
-                    }
+                    DecodeMessageHandle( Usart_Num, Decode_Buffer );
                     rx_count = 0;
                     *Decode_ComStatu = FRAMEHEADER;
                 }

@@ -1,22 +1,22 @@
-"I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\USER\stm8s_interruput.c"
+"E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\USER\stm8s_interruput.c"
 -std=c99
 -ferror-limit=0
 -I
-I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\..\FWlib\inc
+E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\..\FWlib\inc
 -I
-I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\..\FWlib\src
+E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\..\FWlib\src
 -I
-I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\Project\..\USER
+E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\Project\..\USER
 -I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\inc
 -I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\stm8\inc\c
 -I
-I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\FWlib\inc
+E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\FWlib\inc
 -I
-I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\FWlib\src
+E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\FWlib\src
 -I
-I:\Github-young-whites\naoxygen-vitality-device\S520-B-Mechanical_Handle_Code\USER
+E:\Work Item Floder\DJM-S520\S520-B-Mechanical_Handle_Code\S520_B_Handle_Code_Ver7.5\USER
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

@@ -5,6 +5,7 @@
 #include "timer.h"
 
 void motor_stop(void);
+void motor_hiz(void);
 void motor_forword(u8 mode);
 void motor_bank(void);
 void check_stop(void);
@@ -35,7 +36,6 @@ typedef struct system
     int  motor_mode;
     volatile char read_pcc1;
     volatile char read_pcc2;
-    unsigned int return_timeout;  /* Return reversal timeout counter */
 }systempara;
 
 extern systempara systemparameter;
