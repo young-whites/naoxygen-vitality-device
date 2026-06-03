@@ -13,8 +13,10 @@ void motor_hiz(void)
 
 void motor_stop(void)
 {
-    /* Stop PWM first, then ENA LOW. Keep IN1/IN2 as outputs. */
-    pwm_init(STOP, SPEED_MODE_0, 0);
+    /* Disable TIM1 outputs directly, no CLK_DeInit */
+    TIM1->CCER1 &= (u8)~(TIM1_CCER1_CC2E | TIM1_CCER1_CC2NE);
+    TIM1->CCER2 &= (u8)~TIM1_CCER2_CC4E;
+    TIM1->BKR &= (u8)~TIM1_BKR_MOE;
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN); // ENA LOW
     motor.direction = 0;
 }
