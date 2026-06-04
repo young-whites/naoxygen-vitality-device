@@ -21,6 +21,7 @@
 #define  LITTLE_CMD            0x15  // Speed mode selection
 #define  ACK_CMD               0x1c  // Handle acknowledge
 #define  HANDLE_CHECK          0xbb  // Handle online response
+#define  CMD_ACK               0xaa  // Command acknowledgment (echo back func+action)
 #define  REVISION_CMD          0x19  // Firmware version query
 #define  REVISION              75    // Firmware version (1-99)
 
@@ -66,6 +67,7 @@ void   SENDDATA_STATUS_MessageHandle(u8 Usart_Num,u8 data_length,u8 *data_buffer
 void   SendMessageToDevice(void);
 void   CommunicationWithMainBoard(void);
 void   senddata(u8 type, u8 data );
+void   send_ack(u8 func_code, u8 action);
 
 
 

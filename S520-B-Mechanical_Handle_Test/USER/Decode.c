@@ -270,6 +270,8 @@ void CMD_MessageHandle( u8 Usart_Num, u8 data_length, u8 *data_buffer )
                 default:
                     break;
             }
+            /* ACK: echo back function code and action value */
+            send_ack(temp_buffer[1], temp_buffer[2]);
         }
     }
 }
@@ -300,6 +302,8 @@ void SENDDATA_STATUS_MessageHandle(u8 Usart_Num,u8 data_length,u8 *data_buffer)
                 default:
                     break;
             }
+            /* ACK: echo back function code and action value */
+            send_ack(temp_buffer[1], temp_buffer[2]);
         }
     }
 }
@@ -320,5 +324,13 @@ void senddata(u8 type, u8 data)
     u8 temp_buffer[2];
     temp_buffer[0]=type;
     temp_buffer[1]=data;
+    SendDataPacketToPeripheral(2,SENDCMD,NORMAL_DATA_SEND,temp_buffer);
+}
+
+void send_ack(u8 func_code, u8 action)
+{
+    u8 temp_buffer[2];
+    temp_buffer[0]=func_code;
+    temp_buffer[1]=action;
     SendDataPacketToPeripheral(2,SENDCMD,NORMAL_DATA_SEND,temp_buffer);
 }
