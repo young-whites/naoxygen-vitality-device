@@ -17,6 +17,7 @@
 
 
 #define  MOVE_CMD              0x2d  // Motor control: stop/forward/backward
+#define  MOTOR_MODE_CMD        0x17  // Motor mode control: stop/forward by mode
 #define  LITTLE_CMD            0x15  // Speed mode selection
 #define  ACK_CMD               0x1c  // Handle acknowledge
 #define  HANDLE_CHECK          0xbb  // Handle online response

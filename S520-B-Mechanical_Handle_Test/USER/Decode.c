@@ -206,6 +206,18 @@ void CMD_MessageHandle( u8 Usart_Num, u8 data_length, u8 *data_buffer )
         {
             switch ( temp_buffer[1] )
             {
+                case MOTOR_MODE_CMD:
+                {
+                    if (temp_buffer[2] == 0 || temp_buffer[2] == 5)  /* stop */
+                    {
+                        motor_stop();
+                    }
+                    else if (temp_buffer[2] >= 1 && temp_buffer[2] <= 4)  /* step forward */
+                    {
+                        motor_forward(motor_mode);
+                    }
+                    break;
+                }
                 case MOVE_CMD:
                 {
                     if (temp_buffer[2] == 0)       /* stop */
@@ -219,6 +231,17 @@ void CMD_MessageHandle( u8 Usart_Num, u8 data_length, u8 *data_buffer )
                     else if (temp_buffer[2] == 1)  /* backward */
                     {
                         motor_backward();
+                    }
+                    else if (temp_buffer[2] == 3)  /* reset: backward + notify */
+                    {
+                        motor_backward();
+                        senddata(0x2F, 1);  // RETURN_FLAG_CMD = 1, motor returning
+                    }
+                    else if (temp_buffer[2] == 4)  /* backward 0.6s then stop */
+                    {
+                        motor_backward();
+                        Delay_ms(600);
+                        motor_stop();
                     }
                     break;
                 }

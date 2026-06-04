@@ -19,6 +19,8 @@ void motor_stop(void)
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
     pwm_init(STOP, speed_mode[4], 0);
     motor.direction = 0;
+    motor.limit_front = 0;  /* clear front limit flag */
+    motor.limit_rear = 0;   /* clear rear limit flag */
 }
 
 void motor_forward(u8 mode)
