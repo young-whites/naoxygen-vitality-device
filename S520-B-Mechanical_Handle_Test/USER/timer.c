@@ -5,17 +5,11 @@
 
 int pwm_init(TIM1_OCMode_TypeDef TIM1_OCMode,u32 TIM1_Peri0d,u8 direction)
 {    
-    CLK_DeInit();
-    CLK_HSICmd(ENABLE);
-    CLK_SYSCLKConfig(CLK_PRESCALER_HSIDIV1);
-    CLK_SYSCLKConfig(CLK_PRESCALER_CPUDIV1);
-    CLK_CCOCmd(DISABLE);
-
-    CLK_HSIPrescalerConfig(CLK_PRESCALER_HSIDIV1);
+    /* Clock already configured in main(), only enable TIM1 peripheral clock */
+    CLK_PeripheralClockConfig( CLK_PERIPHERAL_TIMER1, ENABLE );
 
     TIM1_DeInit(); /* Time Base configuration */
-    /*Tim1的频率为 16mhz/TIM1_Prescaler的2次方/TIM1_Period=100khz*/
-    CLK_PeripheralClockConfig( CLK_PERIPHERAL_TIMER1, ENABLE );
+    /*Tim1 freq: 16mhz/TIM1_Prescaler/TIM1_Period*/
     TIM1_TimeBaseInit(100, TIM1_COUNTERMODE_UP, TIM1_Peri0d, 0); /* Channel 1, 2,3 and 4 Configuration in PWM mode */
 
     if(direction==0)//停止
