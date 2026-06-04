@@ -4,12 +4,12 @@
 #include "stm8s_conf.h"
 #include "timer.h"
 
-/* Speed modes: smaller ARR = faster */
-#define SPEED_MODE_0    3600    /* slowest */
-#define SPEED_MODE_1    3200
-#define SPEED_MODE_2    2800
-#define SPEED_MODE_3    2400    /* fastest */
-#define SPEED_REVERSE   300     /* backward speed */
+/* Motor parameters */
+#define MAX_MOTOR_COUNT  25212
+#define MOTOR_100        252
+
+/* Speed array: smaller value = faster */
+extern u32 speed_mode[6];
 
 void motor_forward(u8 mode);
 void motor_backward(void);

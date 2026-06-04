@@ -481,7 +481,7 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>2</version>
-                    <state>0</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
@@ -489,7 +489,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>STM8S_Demo.s19</state>
+                    <state>STM8S_Demo.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>

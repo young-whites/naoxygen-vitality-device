@@ -1,6 +1,4 @@
-# Prerequisites
-*.d
-
+# ==================== 编译产物 ====================
 # Object files
 *.o
 *.ko
@@ -11,6 +9,7 @@
 *.ilk
 *.map
 *.exp
+*.s19
 
 # Precompiled Headers
 *.gch
@@ -22,7 +21,7 @@
 *.la
 *.lo
 
-# Shared objects (inc. Windows DLLs)
+# Shared objects / DLLs
 *.dll
 *.so
 *.so.*
@@ -35,12 +34,32 @@
 *.i*86
 *.x86_64
 *.hex
+*.bin
+*.axf
 
 # Debug files
 *.dSYM/
 *.su
 *.idb
 *.pdb
+*.dwo
+*.pbd
+*.pbd.browse
+*.pbd.linf
+*.pbw
+
+# Dependency files
+*.d
+*.dep
+*.pbi
+*.pbi.dep
+*.pbi.xcl
+*.ninja_deps
+*.ninja_log
+build.ninja
+
+# Linker scripts generated
+*.xcl
 
 # Kernel Module Compile Results
 *.mod*
@@ -51,5 +70,92 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# debug information files
-*.dwo
+# ==================== IAR Embedded Workbench ====================
+# Debug output directories
+**/Debug/Obj/
+**/Debug/Exe/
+**/Debug/List/
+
+# IAR backup files
+**/Backup*.ewp
+**/Backup*.eww
+
+# IAR user-specific settings
+*.ewt
+*.dbgdt
+*.dni
+*.wspos
+*.rapp
+
+# IAR batch debug scripts
+*.cspy.bat
+
+# ==================== Keil MDK-ARM ====================
+# Keil build output
+**/OBJ/
+**/Listings/
+**/Objects/
+**/RTE/
+
+# Keil user-specific files
+*.uvoptx
+*.uvguix.*
+*.bak
+*.dep
+*.lnp
+*.sct
+*.crf
+*.tra
+*.iex
+*.lst
+*.htm
+*.build_log.htm
+*.plg
+
+# ==================== STM32 CubeMX ====================
+# CubeMX generated build files
+**/MDK-ARM/*.uvoptx
+**/MDK-ARM/*.uvguix.*
+
+# ==================== IDE / Editor ====================
+.vscode/
+.settings/
+*.swp
+*.swo
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==================== RT-Thread ====================
+build/
+Debug/
+*.dblite
+documentation/html
+cscope.*
+ncscope.*
+tags
+
+# ==================== J-Link / RTT ====================
+JLinkLog.txt
+JLinkSettings.ini
+*.rttlaunch
+
+# ==================== Python ====================
+*.pyc
+__pycache__/
+
+# ==================== 其他 ====================
+*.old
+*.bak
+*.uimg
+GPATH
+GRTAGS
+GTAGS
+.config 3
+.config 4
+.config 5

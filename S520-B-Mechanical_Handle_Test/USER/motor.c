@@ -5,6 +5,9 @@
 
 motor_state_t motor;
 
+/* Global speed array init: values correspond to motor speeds */
+u32 speed_mode[6] = {0, 0, 0, 0, 0, 300}; // smaller = faster
+
 void motor_hiz(void)
 {
     GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_IN_FL_NO_IT);
@@ -13,33 +16,21 @@ void motor_hiz(void)
 
 void motor_stop(void)
 {
-    /* Match original: ENA LOW then full TIM1 reinit */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    pwm_init(STOP, SPEED_MODE_0, 0);
+    pwm_init(STOP, speed_mode[4], 0);
     motor.direction = 0;
 }
 
 void motor_forward(u8 mode)
 {
-    u32 speed_arr;
-
     if (motor.limit_front) return;
-
-    /* Map mode to ARR value */
-    switch (mode) {
-        case 0:  speed_arr = SPEED_MODE_0; break;
-        case 1:  speed_arr = SPEED_MODE_1; break;
-        case 2:  speed_arr = SPEED_MODE_2; break;
-        case 3:  speed_arr = SPEED_MODE_3; break;
-        default: speed_arr = SPEED_MODE_2; break;
-    }
 
     motor.direction = 2;
     /* Startup sequence: ENA LOW -> stop -> ENA HIGH -> start */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    pwm_init(STOP, SPEED_MODE_0, 0);
+    pwm_init(STOP, speed_mode[4], 0);
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    pwm_init(START, speed_arr, 2);
+    pwm_init(START, speed_mode[mode], 2);
 }
 
 void motor_backward(void)
@@ -49,9 +40,9 @@ void motor_backward(void)
     motor.direction = 1;
     /* Startup sequence: ENA LOW -> stop -> ENA HIGH -> start */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    pwm_init(STOP, SPEED_MODE_0, 0);
+    pwm_init(STOP, speed_mode[4], 0);
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    pwm_init(START, SPEED_REVERSE, 1);
+    pwm_init(START, speed_mode[5], 1);
 }
 
 void check_limit(void)
