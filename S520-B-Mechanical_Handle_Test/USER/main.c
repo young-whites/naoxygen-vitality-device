@@ -41,6 +41,8 @@ int main(void)
     motor.limit_front = 0;
 
     Delay_ms(100);
+    /* Check limit switches immediately at startup to set correct flags */
+    check_limit();
     Write_Option_Byte();
 
     Start_Flag = EEPROM_ReadData(START_FLAG_ADDR);
