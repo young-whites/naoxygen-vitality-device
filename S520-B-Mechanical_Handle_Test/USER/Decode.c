@@ -329,8 +329,10 @@ void senddata(u8 type, u8 data)
 
 void send_ack(u8 func_code, u8 action)
 {
-    u8 temp_buffer[2];
+    u8 temp_buffer[4];
     temp_buffer[0]=func_code;
     temp_buffer[1]=action;
-    SendDataPacketToPeripheral(2,SENDCMD,NORMAL_DATA_SEND,temp_buffer);
+    temp_buffer[2]=motor.limit_front | (motor.limit_rear<<1) | (motor.override_front<<2) | (motor.override_rear<<3);
+    temp_buffer[3]=motor.direction;
+    SendDataPacketToPeripheral(4,SENDCMD,NORMAL_DATA_SEND,temp_buffer);
 }
