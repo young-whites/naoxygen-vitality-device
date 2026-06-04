@@ -67,10 +67,19 @@ void motor_backward(void)
 
     motor.direction = 1;
 
-    /* Safely stop TIM1 first (avoid interrupt storm from period=0) */
+    /* Direct GPIO toggle to verify motor driver responds */
+    /* First: set IN1=LOW, IN2=HIGH manually to test driver */
     TIM1_DeInit();
     TIM1_Cmd(DISABLE);
     TIM1_CtrlPWMOutputs(DISABLE);
+
+    GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
+    GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
+    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
+    GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
+    GPIO_WriteLow(IN1_PORT, IN1_PIN);
+    GPIO_WriteHigh(IN2_PORT, IN2_PIN);
+    Delay_ms(100);
 
     /* Then start backward PWM */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
