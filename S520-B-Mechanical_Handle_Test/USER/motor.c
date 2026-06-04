@@ -29,8 +29,7 @@ void motor_stop(void)
     GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
 
     motor.direction = 0;
-    motor.limit_front = 0;
-    motor.limit_rear = 0;
+    /* Do NOT clear limit flags here - they persist until motor moves away from switch */
 }
 
 void motor_forward(u8 mode)
@@ -71,19 +70,23 @@ void check_limit(void)
 {
     u8 sw;
 
+    /* PC1 = rear limit switch */
     sw = READ_PC1();
     if (sw && !motor.limit_rear) {
         motor.limit_rear = 1;
         motor_stop();
-    } else if (!sw) {
+    } else if (!sw && motor.direction == 2) {
+        /* Clear rear limit only when motor is moving forward (away from rear switch) */
         motor.limit_rear = 0;
     }
 
+    /* PC2 = front limit switch */
     sw = READ_PC2();
     if (sw && !motor.limit_front) {
         motor.limit_front = 1;
         motor_stop();
-    } else if (!sw) {
+    } else if (!sw && motor.direction == 1) {
+        /* Clear front limit only when motor is moving backward (away from front switch) */
         motor.limit_front = 0;
     }
 }
