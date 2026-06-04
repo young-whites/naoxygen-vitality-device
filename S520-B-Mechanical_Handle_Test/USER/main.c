@@ -39,6 +39,8 @@ int main(void)
     motor.direction = 0;
     motor.limit_rear = 0;
     motor.limit_front = 0;
+    motor.override_front = 0;
+    motor.override_rear = 0;
 
     Delay_ms(100);
     /* Check limit switches immediately at startup to set correct flags */

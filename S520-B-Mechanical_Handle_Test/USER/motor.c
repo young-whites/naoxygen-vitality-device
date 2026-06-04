@@ -36,7 +36,10 @@ void motor_forward(u8 mode)
 {
     if (motor.limit_front) return;
 
-    /* Clear rear limit when user explicitly commands forward */
+    /* If rear limit was active, set override so check_limit won't re-trigger it */
+    if (motor.limit_rear) {
+        motor.override_rear = 1;
+    }
     motor.limit_rear = 0;
 
     motor.direction = 2;
@@ -56,7 +59,10 @@ void motor_backward(void)
 {
     if (motor.limit_rear) return;
 
-    /* Clear front limit when user explicitly commands backward */
+    /* If front limit was active, set override so check_limit won't re-trigger it */
+    if (motor.limit_front) {
+        motor.override_front = 1;
+    }
     motor.limit_front = 0;
 
     motor.direction = 1;
@@ -78,21 +84,29 @@ void check_limit(void)
 
     /* PC1 = rear limit switch */
     sw = READ_PC1();
-    if (sw && !motor.limit_rear) {
+    if (sw && !motor.limit_rear && !motor.override_rear) {
+        /* New limit trigger - stop motor */
         motor.limit_rear = 1;
         motor_stop();
-    } else if (!sw && motor.direction == 2) {
-        /* Clear rear limit only when motor is moving forward (away from rear switch) */
+    } else if (!sw && motor.override_rear) {
+        /* Switch released after override - clear override */
+        motor.override_rear = 0;
+    } else if (!sw && motor.limit_rear && motor.direction == 2) {
+        /* Motor moving forward away from rear switch - clear limit */
         motor.limit_rear = 0;
     }
 
     /* PC2 = front limit switch */
     sw = READ_PC2();
-    if (sw && !motor.limit_front) {
+    if (sw && !motor.limit_front && !motor.override_front) {
+        /* New limit trigger - stop motor */
         motor.limit_front = 1;
         motor_stop();
-    } else if (!sw && motor.direction == 1) {
-        /* Clear front limit only when motor is moving backward (away from front switch) */
+    } else if (!sw && motor.override_front) {
+        /* Switch released after override - clear override */
+        motor.override_front = 0;
+    } else if (!sw && motor.limit_front && motor.direction == 1) {
+        /* Motor moving backward away from front switch - clear limit */
         motor.limit_front = 0;
     }
 }

@@ -21,6 +21,8 @@ typedef struct {
     volatile u8 direction;
     volatile u8 limit_rear;
     volatile u8 limit_front;
+    volatile u8 override_front;  /* 1=skip front limit check until switch released */
+    volatile u8 override_rear;   /* 1=skip rear limit check until switch released */
 } motor_state_t;
 
 extern motor_state_t motor;
