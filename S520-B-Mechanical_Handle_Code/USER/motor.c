@@ -12,7 +12,7 @@
 u32 speed_mode[6] = {3600,3200,2800,2400,0,300};//值越小，速度越快
 
 
-systempara systemparameter;
+systempara systemparameter;                  
 uint8_t Location;
 
 static void delay(u16 z)
@@ -40,17 +40,10 @@ void SendRuturnFlag(u8 flag)
     senddata(RUTURN_FLAG_CMD,flag);
 }
 
-void motor_hiz(void)
-{
-    // Set IN1/IN2 to high-impedance (floating input)
-    GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_IN_FL_NO_IT);
-    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_IN_FL_NO_IT);
-}
-
 void motor_stop(void)
 {
+    GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);//带上拉，推挽输出低电平
     pwm_init( STOP,speed_mode[4],0);
-    motor_hiz(); // IN1/IN2 to Hi-Z, ENA stays HIGH
     systemparameter.currt_mode=0;
 }
 
@@ -64,18 +57,18 @@ EEPROM_WriteData(MOTOR_DATA_ADDR_HIGH8,systemparameter.tim1_count_cnt1/256);
 void motor_forword(u8 mode)   
 {
     systemparameter.currt_mode=2;
-    // Reconfigure IN1/IN2 as push-pull output for timer PWM control
-    GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
+    GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);//带上拉，推挽输出低电平
+    pwm_init( STOP,speed_mode[4],0);
+    GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);//带上拉，推挽输出低电平
     pwm_init( START,speed_mode[mode],2);
 }
 
 void motor_bank(void)
 {
     systemparameter.currt_mode=1;
-    // Reconfigure IN1/IN2 as push-pull output for timer PWM control
-    GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
+    GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);//带上拉，推挽输出低电平
+    pwm_init( STOP,speed_mode[4],0);
+    GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);//带上拉，推挽输出低电平
     pwm_init( START,speed_mode[5],1);
 }
 
