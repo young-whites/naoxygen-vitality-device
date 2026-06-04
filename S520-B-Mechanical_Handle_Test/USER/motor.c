@@ -36,6 +36,9 @@ void motor_forward(u8 mode)
 {
     if (motor.limit_front) return;
 
+    /* Clear rear limit when user explicitly commands forward */
+    motor.limit_rear = 0;
+
     motor.direction = 2;
 
     /* Safely stop TIM1 first */
@@ -52,6 +55,9 @@ void motor_forward(u8 mode)
 void motor_backward(void)
 {
     if (motor.limit_rear) return;
+
+    /* Clear front limit when user explicitly commands backward */
+    motor.limit_front = 0;
 
     motor.direction = 1;
 
