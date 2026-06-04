@@ -59,6 +59,9 @@ void motor_backward(void)
 {
     if (motor.limit_rear) return;
 
+    /* Debug: confirm backward command received */
+    senddata(0x2F, 1);  // Return flag: motor returning
+
     /* If front limit was active, set override so check_limit won't re-trigger it */
     if (motor.limit_front) {
         motor.override_front = 1;
