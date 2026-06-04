@@ -84,8 +84,12 @@ dkms.conf
 *.ewt
 *.dbgdt
 *.dni
+*.dnx
 *.wspos
+*.wsdt
 *.rapp
+*.reggroups
+settings/
 
 # IAR batch debug scripts
 *.cspy.bat
