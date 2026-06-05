@@ -44,7 +44,7 @@ int main(void)
 
     Delay_ms(100);
     /* Check limit switches immediately at startup to set correct flags */
-    check_limit();
+    // check_limit();  // temporarily disabled: full command control
     Write_Option_Byte();
 
     Start_Flag = EEPROM_ReadData(START_FLAG_ADDR);
@@ -65,6 +65,6 @@ int main(void)
 
     while(1)
     {
-        check_limit();
+        // check_limit();  // temporarily disabled: full command control
     }
 }
