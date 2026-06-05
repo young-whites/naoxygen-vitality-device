@@ -17,19 +17,9 @@ void motor_hiz(void)
 
 void motor_stop(void)
 {
-    /* Disable TIM1 immediately to prevent interrupt storm (speed_mode[4]=0 causes period=0) */
-    TIM1_DeInit();
-    TIM1_Cmd(DISABLE);
-    TIM1_CtrlPWMOutputs(DISABLE);
-    CLK_PeripheralClockConfig(CLK_PERIPHERAL_TIMER1, DISABLE);
-
-    /* Set motor control pins to safe state: IN1=LOW, IN2=LOW, ENA=LOW */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-
+    pwm_init(STOP, speed_mode[4], 0);
     motor.direction = 0;
-    /* Do NOT clear limit flags here - they persist until motor moves away from switch */
 }
 
 void motor_forward(u8 mode)
@@ -44,19 +34,9 @@ void motor_forward(u8 mode)
 
     motor.direction = 2;
 
-    /* Safely stop TIM1 first */
-    TIM1_DeInit();
-    TIM1_Cmd(DISABLE);
-    TIM1_CtrlPWMOutputs(DISABLE);
-
-    /* Then start forward PWM */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
+    pwm_init(STOP, speed_mode[4], 0);
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-
-    /* Explicitly set IN2=LOW to ensure forward direction */
-    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_WriteLow(IN2_PORT, IN2_PIN);
-
     pwm_init(START, speed_mode[mode], 2);
 }
 
@@ -72,22 +52,8 @@ void motor_backward(void)
 
     motor.direction = 1;
 
-    /* Direct GPIO toggle to verify motor driver responds */
-    /* First: set IN1=LOW, IN2=HIGH manually to test driver */
-    TIM1_DeInit();
-    TIM1_Cmd(DISABLE);
-    TIM1_CtrlPWMOutputs(DISABLE);
-
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    GPIO_Init(IN1_PORT, IN1_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
-    GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
-    GPIO_WriteLow(IN1_PORT, IN1_PIN);
-    GPIO_WriteHigh(IN2_PORT, IN2_PIN);
-    Delay_ms(100);
-
-    /* Then start backward PWM */
-    GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
+    pwm_init(STOP, speed_mode[4], 0);
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
     pwm_init(START, speed_mode[5], 1);
 }
