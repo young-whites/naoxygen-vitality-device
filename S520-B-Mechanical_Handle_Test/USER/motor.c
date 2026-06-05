@@ -52,6 +52,11 @@ void motor_forward(u8 mode)
     /* Then start forward PWM */
     GPIO_WriteLow(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
     GPIO_WriteHigh(MOTOR_ENA_PORT, MOTOR_ENA_PIN);
+
+    /* Explicitly set IN2=LOW to ensure forward direction */
+    GPIO_Init(IN2_PORT, IN2_PIN, GPIO_MODE_OUT_PP_LOW_SLOW);
+    GPIO_WriteLow(IN2_PORT, IN2_PIN);
+
     pwm_init(START, speed_mode[mode], 2);
 }
 
