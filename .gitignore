@@ -127,7 +127,6 @@ settings/
 *.swp
 *.swo
 *~
-sscom51.ini
 .DS_Store
 .DS_Store?
 ._*
