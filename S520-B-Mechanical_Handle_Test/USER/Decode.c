@@ -226,7 +226,7 @@ void CMD_MessageHandle( u8 Usart_Num, u8 data_length, u8 *data_buffer )
                     }
                     else if (temp_buffer[2] == 2)  /* forward */
                     {
-                        motor_forward(motor_mode);
+                        motor_forward(5);
                     }
                     else if (temp_buffer[2] == 1)  /* backward */
                     {
