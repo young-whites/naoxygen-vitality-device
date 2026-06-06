@@ -161,15 +161,21 @@ void check_stop(void)
  */
 void motor_limit_test_start(u16 forward_pulses)
 {
-    if (systemparameter.stop_flog != 0) {
-        /* A limit is already triggered, skip test */
-        senddata(DATA_CMD, 0xEE); /* error: already at limit */
+    if (systemparameter.stop_flog == 2) {
+        /* At front limit - cannot test, need to back first manually */
+        senddata(DATA_CMD, 0xEE);
         return;
     }
-    systemparameter.test_state = TEST_BACKING;
-    systemparameter.test_forward_cnt = 0;
     systemparameter.test_target = forward_pulses;
-    motor_bank(); /* start moving backward */
+    systemparameter.test_forward_cnt = 0;
+    if (systemparameter.stop_flog == 1) {
+        /* Already at rear limit - skip backing, go directly to forward */
+        systemparameter.test_state = TEST_WAIT_AFTER_STOP;
+    } else {
+        /* Normal case - start backing */
+        systemparameter.test_state = TEST_BACKING;
+        motor_bank();
+    }
 }
 
 /*
