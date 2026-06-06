@@ -217,11 +217,20 @@ void motor_limit_test_update(void)
 
         case TEST_FORWARDING:
             /* Check if we moved forward enough pulses */
-            if (systemparameter.tim1_count_cnt1 <= systemparameter.test_forward_cnt - systemparameter.test_target
-                || systemparameter.stop_flog == 2) {
-                /* Target reached or front limit hit */
-                motor_stop();
-                systemparameter.test_state = TEST_DONE;
+            /* Critical section: read tim1_count_cnt1 atomically on 8-bit MCU */
+            disableInterrupts();
+            {
+                u16 cur_pos = systemparameter.tim1_count_cnt1;
+                u16 start_pos = systemparameter.test_forward_cnt;
+                u16 target = systemparameter.test_target;
+                enableInterrupts();
+                /* Guard against underflow: only check if start_pos >= target */
+                if ((start_pos >= target && cur_pos <= start_pos - target)
+                    || systemparameter.stop_flog == 2) {
+                    /* Target reached or front limit hit */
+                    motor_stop();
+                    systemparameter.test_state = TEST_DONE;
+                }
             }
             break;
 

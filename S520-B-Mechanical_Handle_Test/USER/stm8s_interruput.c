@@ -31,7 +31,6 @@ void Timing_1ms(void)
 __interrupt void TIM2_IRQHandler(void)
 {
     static uint32_t msCnt = 0;
-    msCnt++;
     /*计数用于取余运算来判断时间事件*/
     if (++msCnt >= 60000)
     {
@@ -54,7 +53,7 @@ __interrupt void TIM1_UPD_OVF_TRG_BRK_IRQHandler( void )
 {
     if(systemparameter.currt_mode==1)//backforward
     {    
-        if(systemparameter.tim1_count_cnt1 <= systemparameter.max_motor_count)
+        if(systemparameter.tim1_count_cnt1 < systemparameter.max_motor_count)
         {     
             if(systemparameter.tim1_count_cnt1%systemparameter.motor_100==0)
             { 
