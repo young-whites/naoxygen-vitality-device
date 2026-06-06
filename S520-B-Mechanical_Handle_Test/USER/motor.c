@@ -24,7 +24,7 @@ void motor_stop(void)
 
 void motor_forward(u8 mode)
 {
-    // if (motor.limit_front) return;  // temporarily disabled: full command control
+    if (motor.limit_front) return;
 
     /* If rear limit was active, set override so check_limit won't re-trigger it */
     if (motor.limit_rear) {
@@ -42,7 +42,7 @@ void motor_forward(u8 mode)
 
 void motor_backward(void)
 {
-    // if (motor.limit_rear) return;  // temporarily disabled: full command control
+    if (motor.limit_rear) return;
 
     /* If front limit was active, set override so check_limit won't re-trigger it */
     if (motor.limit_front) {
@@ -60,8 +60,6 @@ void motor_backward(void)
 
 void check_limit(void)
 {
-#if 0
-    /* Temporarily disabled: limit switch logic bypassed for full command control */
     u8 sw;
 
     /* PC1 = rear limit switch */
@@ -91,5 +89,33 @@ void check_limit(void)
         /* Motor moving backward away from front switch - clear limit */
         motor.limit_front = 0;
     }
-#endif
+}
+
+void motor_move_pulses(u8 mode, u32 pulses, u8 direction)
+{
+    motor.target_pulses = pulses;
+    motor.current_pulses = 0;
+    motor.pulse_mode = 1;
+
+    if (direction == 2) {
+        motor_forward(mode);
+    } else {
+        motor_backward();
+    }
+}
+
+void motor_home_sequence(void)
+{
+    check_limit();
+
+    if (motor.limit_front) {
+        /* Front limit triggered - move backward to clear */
+        motor_backward();
+        while (motor.limit_front) {
+            check_limit();
+        }
+        motor_stop();
+    } else if (motor.limit_rear) {
+        /* Rear limit triggered - already at home, wait */
+    }
 }

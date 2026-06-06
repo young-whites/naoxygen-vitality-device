@@ -51,8 +51,14 @@ __interrupt void TIM2_IRQHandler(void)
 #pragma vector=0xD
 __interrupt void TIM1_UPD_OVF_TRG_BRK_IRQHandler( void )
 {
-    /* TIM1 update interrupt - kept for PWM operation.
-       Step counting and position tracking removed in refactor. */
+    /* TIM1 update interrupt - PWM pulse counting */
+    if (motor.pulse_mode) {
+        motor.current_pulses++;
+        if (motor.current_pulses >= motor.target_pulses) {
+            motor_stop();
+            motor.pulse_mode = 0;
+        }
+    }
     TIM1_ClearITPendingBit( TIM1_IT_UPDATE );
 }
 

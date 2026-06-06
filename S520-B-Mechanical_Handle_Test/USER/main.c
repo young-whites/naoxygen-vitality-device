@@ -41,10 +41,14 @@ int main(void)
     motor.limit_front = 0;
     motor.override_front = 0;
     motor.override_rear = 0;
+    motor.target_pulses = 0;
+    motor.current_pulses = 0;
+    motor.pulse_mode = 0;
 
     Delay_ms(100);
     /* Check limit switches immediately at startup to set correct flags */
-    // check_limit();  // temporarily disabled: full command control
+    check_limit();
+    motor_home_sequence();
     Write_Option_Byte();
 
     Start_Flag = EEPROM_ReadData(START_FLAG_ADDR);
@@ -65,6 +69,6 @@ int main(void)
 
     while(1)
     {
-        // check_limit();  // temporarily disabled: full command control
+        check_limit();
     }
 }
