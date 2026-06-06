@@ -16,14 +16,20 @@
 #define  NORMAL_DATA_SEND       0x02
 
 
-#define  MOVE_CMD              0x2d  // Motor control: stop/forward/backward
-#define  MOTOR_MODE_CMD        0x17  // Motor mode control: stop/forward by mode
-#define  LITTLE_CMD            0x15  // Speed mode selection
-#define  ACK_CMD               0x1c  // Handle acknowledge
-#define  HANDLE_CHECK          0xbb  // Handle online response
-#define  CMD_ACK               0xaa  // Command acknowledgment (echo back func+action)
-#define  REVISION_CMD          0x19  // Firmware version query
-#define  REVISION              75    // Firmware version (1-99)
+#define  MOTOR_MODE_CMD        0x17//工作模式功能码
+#define  Speed_Adjust_Cmd      0xED//工作模式功能码
+#define  MOVE_CMD              0x2d//控制电机前进后退和停止
+#define  CHECK_MOTOR_CMD       0x3d//控制电机校验
+#define  LITTLE_CMD            0x15//电机速度微调//改为调节电机模式速度。
+#define  ACK_CMD               0x1c//询问是否有机械手柄功能码
+#define  MOTOR_STEP_SAVE        0x3e     //表示电机进度保存
+#define  MOTOR_STEP_CMD        0x2e     //表示电机进度
+#define  RUTURN_FLAG_CMD       0x2F     //表示电机正在自动退回
+#define  HANDLE_CHECK          0xbb//表示手柄检测
+#define  DATA_CMD              0xbf//发送数据到主板，主板仿真可以看到参数值。
+#define  REVISION_CMD          0x19  //版本号指令
+#define  REVISION              75//版本号，从1到99整数  此版本号是在程序变动后烧录到flash中的
+#define  LIMIT_TEST_CMD        0x40 //limit switch test: back to rear limit, then forward N pulses
 
 #define  Channel   1
 
@@ -67,7 +73,6 @@ void   SENDDATA_STATUS_MessageHandle(u8 Usart_Num,u8 data_length,u8 *data_buffer
 void   SendMessageToDevice(void);
 void   CommunicationWithMainBoard(void);
 void   senddata(u8 type, u8 data );
-void   send_ack(u8 func_code, u8 action);
 
 
 

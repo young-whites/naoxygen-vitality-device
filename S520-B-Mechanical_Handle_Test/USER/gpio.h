@@ -28,6 +28,15 @@
 
 
 
+// #define ON                           0
+// #define OFF                          1
+
+// #define IN1(statu)   if(statu==ON)  GPIO_WriteHigh(IN1_PORT,IN1_PIN);\
+//                          else            GPIO_WriteLow(IN1_PORT,IN1_PIN); 
+
+// #define IN2(statu)   if(statu==ON)  GPIO_WriteHigh(IN2_PORT,IN2_PIN);\
+//                          else            GPIO_WriteLow(IN2_PORT,IN2_PIN); 
+
 #define READ_PC1() GPIO_ReadInputPin(PC1_PORT,PC1_PIN)
 #define READ_PC2() GPIO_ReadInputPin(PC2_PORT,PC2_PIN)     
                          

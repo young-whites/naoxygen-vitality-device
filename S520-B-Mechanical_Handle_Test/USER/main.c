@@ -9,6 +9,9 @@
 #include "stm8s.h"
 
 
+extern uint8_t adjust_mode;
+extern int adjust_Value;
+
 void Write_Option_Byte(void)
 {
     static u16 Option;
@@ -27,8 +30,9 @@ void Write_Option_Byte(void)
 int main(void)
 {
     uint8_t Start_Flag = 0;
-
-
+    uint8_t Progress_H , Progress_L;
+    
+    
     disableInterrupts();
     CLK_HSIPrescalerConfig( CLK_PRESCALER_HSIDIV1 );
     GPIO_Config();
@@ -36,39 +40,82 @@ int main(void)
     TIM2_Config();
     enableInterrupts();
 
-    motor.direction = 0;
-    motor.limit_rear = 0;
-    motor.limit_front = 0;
-    motor.override_front = 0;
-    motor.override_rear = 0;
-    motor.target_pulses = 0;
-    motor.current_pulses = 0;
-    motor.pulse_mode = 0;
-
+    systemparameter.currt_mode=0;
+    systemparameter.stop_flog=0;
+    systemparameter.k_flag=0;
+    systemparameter.ack_flag=0;
+    systemparameter.read_pcc1=0;
+    systemparameter.SendDjData_flag=0;
+    systemparameter.IfRuturning=0;
+    systemparameter.motor_mode=2;
+    systemparameter.test_state=TEST_IDLE;
+    systemparameter.test_forward_cnt=0;
+    systemparameter.test_target=0;
     Delay_ms(100);
-    /* Check limit switches immediately at startup to set correct flags */
-    check_limit();
-    motor_home_sequence();
     Write_Option_Byte();
 
+
     Start_Flag = EEPROM_ReadData(START_FLAG_ADDR);
-    if (Start_Flag != 0x01) {
+
+    if (Start_Flag == 0x01) {
+
+        adjust_mode = EEPROM_ReadData(ADJUST_SPEED_MODE_ADDR);
+        Delay_ms(10);
+        adjust_Value = EEPROM_ReadData(ADJUST_SPEED_VALUE_ADDR);
+        Delay_ms(10);
+
+        /* �������������������� */
+        Progress_H = EEPROM_ReadData(MOTOR_DATA_ADDR_HIGH8);
+         Delay_ms(10);
+        Progress_L = EEPROM_ReadData(MOTOR_DATA_ADDR_LOW8);
+         Delay_ms(10);
+        systemparameter.tim1_count_cnt1 = (Progress_H << 8) | Progress_L;
+
+        systemparameter.max_motor_count = MAX_MOTOR_COUNT;
+        systemparameter.motor_100 = MOTOR_100;
+    }
+    else {
+        adjust_mode = 0;
+        adjust_Value = 0;
         EEPROM_WriteData(START_FLAG_ADDR, 0x01);
         Delay_ms(10);
+        EEPROM_WriteData(MOTOR_DATA_ADDR_LOW8, 0);
+        Delay_ms(10);
+        EEPROM_WriteData(MOTOR_DATA_ADDR_HIGH8, 0);
+        Delay_ms(10);
+        EEPROM_WriteData(ADJUST_SPEED_MODE_ADDR, adjust_mode);
+        Delay_ms(10);
+        EEPROM_WriteData(ADJUST_SPEED_VALUE_ADDR, adjust_Value);
+        Delay_ms(10);
+
+        systemparameter.max_motor_count = MAX_MOTOR_COUNT;
+        systemparameter.motor_100 = MOTOR_100;
     }
 
-    speed_mode[0]=(u32)(-0.1094*MAX_MOTOR_COUNT + 5740);//11
-    speed_mode[1]=(u32)(-0.1094*MAX_MOTOR_COUNT + 6200);//10
-    speed_mode[2]=(u32)(-0.1094*MAX_MOTOR_COUNT + 5850);//9:35
-    speed_mode[3]=(u32)(-0.1094*MAX_MOTOR_COUNT + 5350);//8
+  
+    if (adjust_mode == 1) {
+        adjust_Value = -adjust_Value;
+    }
 
-    senddata(REVISION_CMD, REVISION);
-    Delay_ms(50);
-    senddata(HANDLE_CHECK, 0);
-    Delay_ms(50);
+    speed_mode[0]=(u32)(-0.1094*systemparameter.max_motor_count + adjust_Value + 5740);//11
+    speed_mode[1]=(u32)(-0.1094*systemparameter.max_motor_count + adjust_Value + 6200);//10
+    speed_mode[2]=(u32)(-0.1094*systemparameter.max_motor_count + adjust_Value + 5850);//9:35
+    speed_mode[3]=(u32)(-0.1094*systemparameter.max_motor_count + adjust_Value + 5350);//8
 
+    SendDjData();
+    Delay_ms(50);
+    senddata(REVISION_CMD,REVISION);
+    Delay_ms(50);
+    senddata(HANDLE_CHECK,0);
+    Delay_ms(50);
+    
     while(1)
     {
-        check_limit();
+       check_stop();
+       motor_limit_test_update();
     }
+    
 }
+
+
+

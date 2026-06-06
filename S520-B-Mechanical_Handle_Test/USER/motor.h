@@ -4,32 +4,53 @@
 #include "stm8s_conf.h"
 #include "timer.h"
 
-/* Motor parameters */
-#define MAX_MOTOR_COUNT  25212
-#define MOTOR_100        252
-
-/* Speed array: smaller value = faster */
-extern u32 speed_mode[6];
-
-void motor_forward(u8 mode);
-void motor_backward(void);
 void motor_stop(void);
-void motor_hiz(void);
-void check_limit(void);
-void motor_move_pulses(u8 mode, u32 pulses, u8 direction);
-void motor_home_sequence(void);
+void motor_forword(u8 mode);
+void motor_bank(void);
+void check_stop(void);
+void SendDjData(void);
+void motor_step_save(void);
 
-typedef struct {
-    volatile u8 direction;
-    volatile u8 limit_rear;
-    volatile u8 limit_front;
-    volatile u8 override_front;  /* 1=skip front limit check until switch released */
-    volatile u8 override_rear;   /* 1=skip rear limit check until switch released */
-    volatile u32 target_pulses;    /* target pulse count */
-    volatile u32 current_pulses;   /* current pulse counter */
-    volatile u8  pulse_mode;       /* 1=pulse count mode, 0=continuous */
-} motor_state_t;
+//#define MAX_MOTOR_COUNT  26056
+//#define MOTOR_100  274
 
-extern motor_state_t motor;
+#define MAX_MOTOR_COUNT  25212
+#define MOTOR_100  252
+
+/* Limit switch test state machine */
+#define TEST_IDLE             0
+#define TEST_BACKING          1
+#define TEST_WAIT_AFTER_STOP  2
+#define TEST_FORWARDING       3
+#define TEST_DONE             4
+
+
+extern u32 speed_mode[6] ;//值越小，速度越快
+
+typedef struct system
+{
+    volatile char currt_mode;
+    char stop_flog;
+    char SendDjData_flag;
+    char work_flag;//如果电机走到最前端以后，没有退回到底端，或者没有进行一次手动调节，APP下发的指令接不起作用
+    char k_flag;
+    char IfRuturning;
+    char ack_flag;
+    unsigned int  tim1_count_cnt1;
+    unsigned int  max_motor_count;
+    int  motor_100;
+    int  motor_mode;
+    volatile char read_pcc1;
+    volatile char read_pcc2;
+    volatile u8  test_state;        /* limit test state machine */
+    volatile u16 test_forward_cnt;  /* forward pulse counter for test */
+    volatile u16 test_target;       /* target forward pulses for test */
+}systempara;
+
+extern systempara systemparameter;
+void SendRuturnFlag(u8 flag);
+void motor_limit_test_start(u16 forward_pulses);
+void motor_limit_test_update(void);
+
 
 #endif
